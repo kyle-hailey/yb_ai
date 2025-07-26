@@ -81,9 +81,16 @@ Explain Plan Analysis:
         ```
 *   **Explanation of Why the Current Index is Not Sufficient:** The current primary key on `aid` is HASH-partitioned by default in YugabyteDB. A HASH index is optimized for point lookups (e.g., `WHERE aid = 123`) by distributing rows evenly across tablets. However, it does not store the data in a sorted order, making it unsuitable for range predicates (`BETWEEN`, `>`, `<`). Consequently, the database must perform a full sequential scan of the table and then filter the rows, which is inefficient for queries selecting a small range of data. A `RANGE` index is required to allow the database to directly seek to the start of the range and scan only the relevant rows.
 
-Existing Indexes:
-  CREATE UNIQUE INDEX pgbench_accounts_pkey ON public.pgbench_accounts USING lsm (aid HASH)
-  CREATE INDEX idx_abalance ON public.pgbench_accounts USING lsm (abalance HASH)
+
+<pre><code>**Existing Indexes:**
+
+```sql
+CREATE UNIQUE INDEX pgbench_accounts_pkey ON public.pgbench_accounts USING lsm (aid HASH)
+CREATE INDEX idx_abalance ON public.pgbench_accounts USING lsm (abalance HASH)
+```
+</code></pre>
+
+
 --------------------------------------------------
 2025-07-26 07:44:47,585 - database_connection - INFO - Analyzing query 2: 
 
