@@ -141,9 +141,11 @@ Explain Plan Analysis:
     2.  **Add a secondary RANGE index:** If changing the primary key is not feasible, or to avoid potential write hotspots on a monotonically increasing key, create a secondary `RANGE` index on the `a.aid` column.
         ```sql
         CREATE INDEX pgbench_accounts_aid_range_idx ON pgbench_accounts (aid ASC);
-        ```
 
+        ```
 Existing Indexes:
+```
   CREATE UNIQUE INDEX pgbench_accounts_pkey ON public.pgbench_accounts USING lsm (aid HASH)
   CREATE INDEX idx_abalance ON public.pgbench_accounts USING lsm (abalance HASH)
+```
 
